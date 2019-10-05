@@ -1,72 +1,66 @@
-Encoding Data
+编码数据
 *************
 
-The standard calls the data's encoding its :term:`mode`. The QR code standard
-defines how to encode any given piece of data. There are
-four possible modes. This module supports three of them:
-numeric, alphanumeric, and binary.
+二维码标准里叫数据的编码为二维码的 :term:`mode` 模式。
+二维码标准定义了如何对数据的任何一个已知片段进行编码。
+其中有4种可能的模式，本模块支持三种：
+numeric（纯数字）， alphanumeric（字母数字组合），和 binary（二进制）。
 
-Each mode is worse at encoding the QR code's
-contents. In other words, each mode will require more room in the QR code to
-store the data. How much data a code version can hold is dependent on what
-mode is used and the error correction level. For example, the binary encoding
-always requires more code words than the numeric encoding.
+每种模式在编码二维码内容时都变得更糟糕。
+换句话说，每种模式会需要二维码中更多的空间来存储数据。
+一个二维码版本能存储多少数据，这要根据采用了什么模式和错误纠正级别来决定。
+例如，二进制编码模式一直比纯数字编码模式需要更多的二维码句块。
 
-Because of this, it is *generally* better to allow the QRCode object to
-auto-select the most efficient mode for the code's contents.
+由于这种原因，*通用中* 最好是让 QRCode 对象自动为二维码内容选择最有效的模式。
 
 .. note::
-   The QRCode object can automatically choose the best mode based on the data
-   to be encoded. In general, it is best to just let the object figure it out
-   for you.
+   因为 QRCode 对象可以自动选择最佳模式，根据的也是被编码的数据。
+   通用中，最好的实行就是让 QRCode 为你搞清楚这个状况。
 
-Numeric Encoding
+纯数字编码
 ================
 
-The numeric type is the most efficient way to encode digits. Problematically,
-the standard make no provisions for encoding negative or fractional numbers.
-This encoding is better than Alphanumeric, when you only have a list of
-digits.
+数字类型是最有效的编码数字的方法。
+问题是，二维码标准没有为编码负数或分数做技术支持。
+当你只有数字组成的列表时，纯数字要比字母数字组合要好一些。
 
-To use this encoding, simply specify a string of digits as the data.
-You can also use a positive integer as the code's contents.
+要使用纯数字编码模式，直接把一个数字字符串描述成数据。
+你也可以使用正整数作为二维码的内容。
 
 .. code-block:: python
 
   >>> number = pyqrcode.create(123456789012345)
   >>> number2 = pyqrcode.create('0987654321')
 
-Alphanumeric
+字母数字组合
 ============
 
-The alphanumeric type is very limited in that it can only encode some ASCII
-characters. It encodes:
+字母数字组合类型是非常有限的，只可以编码一些 ASCII 字符。
+能编码的内容有：
 
-* Uppercase letters
-* Digits 0-9
-* The horizontal space
-* Eight punctuation characters: $, %, \*, +, -, ., /, and :
+* 全大写字母
+* 数字 0-9
+* 水平空间
+* 八个标点符号字符： $, %, \*, +, -, ., /, 和 :
 
-A complete list of the possible characters can be found in the
-:py:data:`pyqrcode.tables.ascii_codes` dictionary. While limited, this encoding
-is much more efficient than using the binary encoding, in many cases. Luckily,
-the available characters will let you encode a URL.
+一个完整的可用字符清单在 :py:data:`pyqrcode.tables.ascii_codes` 字典里找得到。
+虽然受到限制，但在许多情况里字母数字组合编码模式要比二进制编码模式更有效。
+幸运的是，可用的字符能够让你完成对一个 URL 进行编码。
 
 .. code-block:: python
 
   >>> url = pyqrcode.create('http://uca.edu'.upper())
 
-Kanji
+Kanji（片假名）
 =====
 
-The final mode allows for the encoding of Kanji characters. Denso Wave, the
-creators of the QR code, is a Japenese company. Hence, they made special
-provisions for using QR codes with Japenese text.
+最终模式是 Kanji 字符编码模式。因为 Denso Wave 二维码的发明人生活在
+日本的一家公司。因此他们制作了对日文二维码具体的支持。
 
-Only one python string encoding for Kanji characters is supported, shift-jis. 
-The auto-detection algorithm will try to encode the given string as shift-jis.
-if the characters are supported, then the mode will be set to kanji.
-Alternatively, you can explicitly define the data's encoding.
+只有 Python 字符串编码成 Kanji 字符时才可以得到支持，shift-jis 字符集。
+自动检测算法会尝试把给出的字符串编码成 shift-jis 字符集。
+如果字符都被支持的话，模式会被设置成 kanji 编码模式。
+另外，你可以明确定义数据的编码。
 
 .. code-block:: python
 
@@ -74,17 +68,16 @@ Alternatively, you can explicitly define the data's encoding.
   >>> monty = pyqrcode.create(utf8, encoding='utf-8')
   >>> python = pyqrcode.create('錦蛇')
 
-Binary
+二进制
 ======
 
-When all else fails the data can be encoded in pure binary. This encoding does
-not change the data in any way. Instead its pure bytes are represented
-directly in the QR code. This is the least efficient way to store data in a
-QR code. You should only use this as a last resort.
+当所有以上三种无法满足你的需求时，可以编码成纯二进制数据。
+这种编码模式不会改变任何数据内容。因此数据的纯字节都直接出现在二维码里。
+在二维码中存储数据时采用二进制编码模式是最没有效率的。
+你应该把二进制编码模式作为无路可走时的解决方案。
 
-The quotation below must be encoded in binary because of the apostrophe,
-exclamation point, and the new line character. Notice, that the string's
-characters will not have their case changed.
+下面这段字符串必须编码成二进制模式，因为文中含有二维码例外的标点符号 `'`，
+感叹号，以及新行转义字符。注意，字符串中的大小写形式并不会被改变。
 
 .. code-block:: python
 

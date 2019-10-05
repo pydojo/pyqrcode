@@ -1,39 +1,37 @@
-Glossary
+词汇表
 ********
 
 .. glossary::
 
    error   
    error level
-        QR codes can use one of four possible error correction values. They
-        are referred to by the letters: L, M, Q, and H. The *L* error correction
-        level corresponds to 7% of the code can be corrected.
-        The *M* error correction level corresponds to 15% of the code can be
-        corrected. The *Q* error correction level corresponds to 25% of the code
-        can be corrected. The *H* error correction level corresponds to 30% of
-        the code can be corrected.
+        二维码可以使用4个可能的纠错值中的一种。这些纠错值用字母表示，分别是：
+         L, M, Q, 和 H。
+        其中 *L* 错误纠正级别对应的是 7% 的二维码可以被纠正。
+        其中 *M* 错误纠正级别是 15% 的二维码可以被纠正。
+        其中 *Q* 错误纠正级别是 25% 的二维码可以被纠正。
+        其中 *H* 错误纠正级别是 30% 的二维码可以被纠正。
 
    mode
-        The encoding used to represent the data in a QR code. There are four
-        possible encodings: binary, numeric, alphanumeric, kanji.
+        使用什么编码模式呈现一个二维码中的数据。编码模式有4种：
+         binary, numeric, alphanumeric, kanji。
    
    module
    data module
-        A square dot on a QR code. Generally, only the "black" dots count. The
-        "white" squares are considered part of the background. 
+        数据块是二维码上的一个正方形点。通用中，只有 "黑色" 点是可数算的。
+        "白色" 块都视为背景部分。
    
    quiet zone
-        An empty area around the QR code. The area is the background module
-        in color. According to the standard this area should be four modules
-        wide.
+        无噪点区域是二维码周围的空区域。无噪点区域是彩色背景块。
+        根据二维码标准，无噪点区域应该是4个块宽。
 
    QR code
    Quick Response code
-        A two dimensional barcode developed by Denso Wave.
+        二维码是一种二维条形码，是由 Denso Wave 开发的。
         
    version
-        A version is one of 40 different possible sizes a QR code comes in. The
-        version of a QR Code determines it maximum possible data capacity.
+        版本是一个二维码的大小，一共有40种不同版本。
+        一个二维码的版本决定了二维码可以最多容纳多少数据。
      
    
         

@@ -1,22 +1,22 @@
-Rendering QR Codes
+翻译二维码
 ******************
 
-There are five possible formats for rendering the QR Code. The first is
-to render it as a string of 1's and 0's. Next, the code can be displayed
-directly in compatible terminals. There are also three image based
-renderers. All, but the first, allow you to set the colors used. They also
-take a scaling factor, that way each module is not rendered as 1 pixel.
+在翻译二维码过程中有 5 种格式。第一种是翻译成由 1 和 0 组成的字符串。
+然后二维码可以直接显示在终端里。也有三种图片格式渲染器。所有这些图片格式，
+第一点就是你要设置使用的颜色。它们也可以得到一种标量因素，这种方式每个模块
+不会渲染成 1 个像素。
 
-Text Based Rendering
+基于文本的翻译
 ====================
 
-The pyqrcode module includes a basic text renderer. This will return a string
-containing the QR code as a string of 1's and 0's, with each row of the code on
-a new line. A :term:`data module` in the QR Code is represented by a 1.
-Likewise, 0 is used to represent the background of the code.
+在 `pyqrcode` 模块中包含了一项基础文本渲染器。
+这会返回一个含有二维码的字符串，由 1 和 0 组成
+了每一行二维码。
+在二维码中一个数据 :term:`data module` 表示成一个1，
+相反，0用来表示二维码的背景。
 
-The purpose of this renderer is to allow users to create their own renderer if
-none of the built in renderers are satisfactory.
+这种渲染器的目的是让用户建立自己的渲染器，因为如果内置
+的渲染器不能满足需求的情况下就更加灵活了。
 
 .. code-block:: python
 
@@ -53,13 +53,12 @@ none of the built in renderers are satisfactory.
   00000000000000000000000000000
 
 
-Terminal Rendering
+终端翻译
 ==================
 
-QR codes can be directly rendered to a compatible terminal in a
-manner readable by QR code scanners.  The rendering is done using ASCII escape
-codes. Hence, most Linux terminals are supported. The QR code's colors can even
-be set.
+二维码可以直接渲染到一个终端里，并且可以直接由二维码扫描器读取。
+使用 ASCII 转义字符来完成翻译。因此绝大多数 Linux 终端都能用。
+二维码的颜色也可以进行设置。
 
 .. code-block:: python
 
@@ -68,59 +67,54 @@ be set.
   >>> print(text.terminal(module_color='red', background='yellow'))
   >>> print(text.terminal(module_color=5, background=123, quiet_zone=1))
 
-Rendering colors in a terminal is a tricky business. Beyond the eight named
-colors, compatibility becomes problematic. With this in mind it is best to
-stick to the eight well known colors: black, red, green, yellow, blue, magenta,
-and cyan. Although, these colors are also supported on almost every color 
-terminal: light gray, dark gray, light red, light green, light blue, light
-yellow, light magenta, light cyan, and white.
+在终端里翻译颜色时，是一项技巧性工作。不能超出8色彩机制范围，
+否则会有问题。记住这一点只要知道8色彩机制的颜色名即可，它们是：
+ black, red, green, yellow, blue, magenta, 和 cyan 。
+尽管只有8个颜色，但也能支持另外一些浅色，名字是：
+ light gray, dark gray, light red, light green, light blue,
+ light yellow, light magenta, light cyan, 和 white 。
 
-There are two additional named colors. The first is "default" it corresponds to
-the default background color of the terminal. The other is "reverse", this
-inverts the current background color. These are the default colors used by the
-terminal method.
+另外有两个颜色名，第一个是 "default" ，它对应着终端的默认背景色。
+第二个是 "reverse" ，它是当前背景色的反差色。这2个颜色名都是通过
+终端方法使用的默认色。
 
-The terminal method also support the 256 color scheme. This is the least
-transportable of the color schemes. To use this color scheme simply supply a
-number between 0 and 256. This number will act as an index to the terminal's
-color palette. What color that index actually corresponds to is system
-dependent. In other words, while most terminal emulators support 256 colors,
-the there is no way to tell what color will be actually displayed.
+终端方法也支持 256 色彩机制。这种色彩机制是最新的颜色机制。
+要使用 256 色直接提供一个0到256的数字即可。这个数字会作为
+终端调色板的索引值。一个颜色实际色是根据操作系统来决定。
+换句话说，大部分终端模拟器都支持 256 色，所以由于操作系统
+原因不能断言一定显示的是什么颜色。
 
-Image Rendering
+图片翻译
 ===============
 
-There are three ways to get an image of the generated QR code. All of the
-renderers have a few things in common.
+有3种方法来得到二维码图片。所有渲染器都有很少的共性。
 
-Each renderer takes a file path or writable stream and draws the QR
-code there. The methods should auto-detect which is which.
+每个渲染器要得到一个文件路径或可写的流数据后，绘制二维码。
+这些方法都应该实现自动侦测。
 
-Each renderer takes a scale parameter. This parameter sets the size of a single
-:term:`data module` in pixels. Setting this parameter to one, will
-result in each :term:`data module` taking up 1 pixel. In other words, the QR
-code would be too small to scan. What scale to use depends on how you plan to
-use the QR code. Generally, three, four, or five will result in small but
-scanable QR codes.
+每个渲染器也要得到一个标量参数。标量参数设置了单个数据
+:term:`data module` 的像素大小。设置标量参数值为1时，
+让每个 :term:`data module` 数据都得到1像素。换句话说，
+二维码太小的话很难实现扫描成功。使用什么标量值根据你要如何
+使用你的二维码来决定。通用中，3、4或5会是最小的尺寸了，而且
+能够扫描成功。
 
-QR codes are also supposed to have a :term:`quiet zone` around them. This area
-is four modules wide on each side. The purpose of the quiet zone is to make
-scanning a printed area more reliable. For electronic usages, this may be
-unnecessary depending on how the code is being displayed. Each of the renderers
-allows you to set the size of the quiet zone.
+二维码也支持有一项 :term:`quiet zone` 无噪点区域环绕着二维码。
+这个区域的每一边是4块宽。无噪点区域是用来确保打印出来的二维码能够
+扫描成功。对于电子用法来说，无噪点区域也许是不需要根据二维码是如何
+显示的。每个渲染器都允许你设置无噪点区域的大小。
 
-Many of the renderers, also, allow you to set the :term:`module` and background
-colors. Although, how the colors are represented are renderer specific.
+许多渲染器也允许你设置 :term:`module` 单位块和背景色。尽管如此，
+颜色如何表现都是渲染器来描述的。
 
-XBM Rendering
+XBM 翻译
 -------------
 
-The XBM file format is a simple black and white image format. The image data
-takes the form of a valid C header file. XBM rendering is handled via the
-:py:meth:`pyqrcode.QRCode.xbm` method.
+对于 XBM 文件格式来说是一种直接黑白图片格式。图片数据采用了
+一种合法 C 头部文件形式。 XBM 渲染过程是通过
+:py:meth:`pyqrcode.QRCode.xbm` 方法来处理的。
 
-XMB's are natively supported by Tkinter. This makes displaying QR codes in a
-Tkinter application very simple.
+XMB 文件天生被 Tkinter 支持。所以在 Tkinter 应用中显示二维码是非常容易。
 
 .. code-block:: python
 
@@ -141,15 +135,14 @@ Tkinter application very simple.
     >>> # The QR code is now visible
     >>> label.pack()
 
-Scalable Vector Graphic (SVG)
+可标量向量图形 (SVG)
 -----------------------------
 
-The SVG renderer outputs the QR code as a scalable vector graphic using
-the :py:meth:`pyqrcode.QRCode.svg` method.
+对于 SVG 渲染器输出的二维码，会是一种可标量向量图形，
+使用 :py:meth:`pyqrcode.QRCode.svg` 方法来实现。
 
-The method draws the QR code using a set of paths. By default, no background is
-drawn, i.e. the resulting code has a transparent background. The
-default foreground (module) color is black.
+该方法绘制二维码要使用一个路径集合。默认情况不绘制背景，
+例如，二维码结果有一种透明背景。默认前景（块单位）颜色是黑色。
 
 .. code-block:: python
 
@@ -161,28 +154,27 @@ default foreground (module) color is black.
   >>> # do whatever you want with buffer.getvalue()
   >>> print(list(buffer.getvalue()))
   
-You can change the colors of the data-modules using the *module_color*
-parameter. Likewise, you can specify a background using the *background*
-parameter. Each of these parameters take a HTML style color.
+你可以改变数据块的颜色，使用 *module_color* 参数实现。
+同样，你可以使用 *background* 参数来描述一个背景色。
+这些参数都可以接受一种 HTML 风格的颜色，例如网络安全色。
 
 .. code-block:: python
 
   >>> url.svg('uca.svg', scale=4, background="white", module_color="#7D007D")
 
-You can also suppress certain parts of the SVG document. In other words you
-can create a SVG fragment.
+你也可以强制 SVG 文档的某部分内容。换句话说，
+你可以建立一个 SVG 碎片。
 
-Encapsulated PostScript (EPS)
+封装的 PostScript 脚本(EPS)
 -----------------------------
 
-The EPS renderer outputs the QR code an encapsulated PostScript document using
-the :py:meth:`pyqrcode.QRCode.eps` method. *This renderer does not require any
-external modules.*
+对于 EPS 渲染器输出二维码来说，是一种封装的 PostScript 脚本文档，
+使用 :py:meth:`pyqrcode.QRCode.eps` 方法来实现。 *这种渲染器
+不需要任何一个外部模块。*
 
-The method draws the EPS document using lines of contiguous modules. By default,
-no background is drawn, i.e. the resulting code has a transparent background.
-The default module color is black. Note, that a scale of 1 equates to a module
-being drawn at 1 point (1/72 of an inch).
+该方法绘制 EPS 文档使用相邻块行实现。默认情况不绘制背景，
+例如，二维码结果有一种透明背景。默认块颜色是黑色。注意，
+1标量等价于一个块绘制在1点上（1/72 英寸）。
 
 .. code-block:: python
 
@@ -192,16 +184,15 @@ being drawn at 1 point (1/72 of an inch).
   >>> out = io.StringIO()
   >>> qr.eps(out, module_color=(.4, .4, .4))
 
-Portable Network Graphic (PNG)
+移植网络图像 (PNG)
 ------------------------------
 
-The PNG renderer outputs the QR code as a portable network graphic file using
-the :py:meth:`pyqrcode.QRCode.png` method.
+对于 PNG 渲染器输出二维码是一种可移植网络图像文件，
+使用 :py:meth:`pyqrcode.QRCode.png` 方法实现。
 
 .. note::
 
-  This renderer requires the `pypng <https://pypi.python.org/pypi/pypng/>`_
-  module.
+  PNG 渲染器需要安装 `pypng <https://pypi.python.org/pypi/pypng/>`_ 模块。
 
 .. code-block:: python
 
@@ -217,14 +208,14 @@ the :py:meth:`pyqrcode.QRCode.png` method.
   >>> print(list(buffer.getvalue()))
 
 
-Colors should be a list or tuple containing numbers between zero an 255. The
-lists should be of length three (for RGB) or four (for RGBA). The color (0,0,0)
-represents black and the color (255,255,255) represents white. A value of zero
-for the fourth element, represents full transparency. Likewise, a value of 255
-for the fourth element represents full opacity.
+颜色应该是一个列表或元素类型，所包含的数字是介于0到255之间。
+列表数据应该是3个值形式（RGB）或4个值形式（RGBA）。颜色是
+ (0,0,0) 表示的是黑色，白色是 (255,255,255) 来表示。
+对于第四个值是0时，表示的是全部透明。同时第四个值是255时，
+表示的是不透明。
 
-By default, the renderer creates a QR code with the data modules colored
-black, and the background modules colored white.
+默认情况，PNG 渲染器建立一个二维码所含的数据块颜色是黑色，
+背景块颜色是白色。
 
 .. code-block:: python
 

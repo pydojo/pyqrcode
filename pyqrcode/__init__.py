@@ -23,12 +23,12 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-"""This module is used to create QR Codes. It is designed to be as simple and
-as possible. It does this by using sane defaults and autodetection to make
-creating a QR Code very simple.
+"""本模块是用来帮助建立二维码的。
+设计上尽可能保持简单。确保使用中正常的默认行为和自动检测
+来帮助建立一个二维码变得非常直接。
 
-It is recommended that you use the :func:`pyqrcode.create` function to build the
-QRCode object. This results in cleaner looking code.
+建议你使用 :func:`pyqrcode.create` 函数来建立 `QRCode` 对象，
+保持代码的整洁性。
 
 Examples:
         >>> import pyqrcode

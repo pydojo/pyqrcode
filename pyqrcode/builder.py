@@ -23,8 +23,9 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-"""This module does the actual generation of the QR codes. The QRCodeBuilder
-builds the code. While the various output methods draw the code into a file.
+"""本模块是实际二维码生成用的。
+其中 `QRCodeBuilder` 类是用来建立二维码实例用的。
+同时不同的输出方法把二维码绘制成一种文件形式。
 """
 
 #Imports required for 2.x support
@@ -36,30 +37,30 @@ import itertools
 import math
 
 class QRCodeBuilder:
-    """This class generates a QR code based on the standard. It is meant to
-    be used internally, not by users!!!
+    """这个类是根据二维码标准生成一个二维码。
+    意味着作为内部使用，而不是用户是用！！！
 
-    This class implements the tutorials found at:
+    这个类的实现教程网址在：
 
     * http://www.thonky.com/qr-code-tutorial/
 
     * http://www.matchadesign.com/blog/qr-code-demystified-part-6/
 
-    This class also uses the standard, which can be read online at:
+    这个类使用的二维码标准在线阅读网址是：
         http://raidenii.net/files/datasheets/misc/qr_code.pdf
 
-    Test codes were tested against:
+    测试代码经过了如下在线测试：
         http://zxing.org/w/decode.jspx
 
-    Also, reference codes were generat/ed at:
+    参考代码所在网址是：
         http://www.morovia.com/free-online-barcode-generator/qrcode-maker.php
         http://demos.telerik.com/aspnet-ajax/barcode/examples/qrcode/defaultcs.aspx
 
-    QR code Debugger:
+    二维码调试器网址是：
         http://qrlogo.kaarposoft.dk/qrdecode.html
     """
     def __init__(self, data, version, mode, error):
-        """See :py:class:`pyqrcode.QRCode` for information on the parameters."""
+        """阅读 :py:class:`pyqrcode.QRCode` 了解参数的信息。"""
         #Set what data we are going to use to generate
         #the QR code
         self.data = data
@@ -96,13 +97,11 @@ class QRCodeBuilder:
         self.make_code()
 
     def grouper(self, n, iterable, fillvalue=None):
-        """This generator yields a set of tuples, where the
-        iterable is broken into n sized chunks. If the
-        iterable is not evenly sized then fillvalue will
-        be appended to the last tuple to make up the difference.
+        """这个实例方法生产一个元组集合，
+        其中可迭代对象分解成n个大小的数据集合。
+        如果可迭代对象不能均分的话，填充值会追加到最后元组中来建立差异性。
 
-        This function is copied from the standard docs on
-        itertools.
+        这个方法复制自 `itertools` 上的标准文档。
         """
         args = [iter(iterable)] * n
         if hasattr(itertools, 'zip_longest'):
@@ -110,16 +109,17 @@ class QRCodeBuilder:
         return itertools.izip_longest(*args, fillvalue=fillvalue)
 
     def binary_string(self, data, length):
-        """This method returns a string of length n that is the binary
-        representation of the given data. This function is used to
-        basically create bit fields of a given size.
+        """这个实例方法返回长度为n的字符串，
+        字符串内容是给出数据的二进制形式。
+
+        这个方法基本上是用来建立已知规模的比特区域。
         """
         return '{{0:0{0}b}}'.format(length).format(int(data))
 
     def get_data_length(self):
-        """QR codes contain a "data length" field. This method creates this
-        field. A binary string representing the appropriate length is
-        returned.
+        """含有一个"数据长度"区域的二维码。
+        这个方法是用来建立这种区域用的。
+        返回一个表示这种长度的二进制字符串。
         """
 
         #The "data length" field varies by the type of code and its mode.
@@ -144,8 +144,8 @@ class QRCodeBuilder:
         return length_string
 
     def encode(self):
-        """This method encodes the data into a binary string using
-        the appropriate algorithm specified by the mode.
+        """这个方法把数据编码成一种二进制字符串，
+        使用相应模式的算法。
         """
         if self.mode == tables.modes['alphanumeric']:
             encoded = self.encode_alphanumeric()
@@ -158,8 +158,8 @@ class QRCodeBuilder:
         return encoded
 
     def encode_alphanumeric(self):
-        """This method encodes the QR code's data if its mode is
-        alphanumeric. It returns the data encoded as a binary string.
+        """这个方法是字母数字组合模式编码二维码数据的算法。
+        返回的数据会编码成一种二进制字符串。
         """
         #Convert the string to upper case
         self.data = self.data.upper()
@@ -186,8 +186,8 @@ class QRCodeBuilder:
             return buf.getvalue()
 
     def encode_numeric(self):
-        """This method encodes the QR code's data if its mode is
-        numeric. It returns the data encoded as a binary string.
+        """这个方法是纯数字模式编码二维码数据的算法。
+        返回的数据会编码成一种二进制字符串。
         """
         with io.StringIO() as buf:
             #Break the number into groups of three digits
@@ -219,8 +219,8 @@ class QRCodeBuilder:
             return buf.getvalue()
 
     def encode_bytes(self):
-        """This method encodes the QR code's data if its mode is
-        8 bit mode. It returns the data encoded as a binary string.
+        """这个方法是8比特模式编码二维码数据的算法。
+        返回的数据会编码成一种二进制字符串。
         """
         with io.StringIO() as buf:
             for char in self.data:
@@ -231,8 +231,8 @@ class QRCodeBuilder:
             return buf.getvalue()
 
     def encode_kanji(self):
-        """This method encodes the QR code's data if its mode is
-        kanji. It returns the data encoded as a binary string.
+        """这个方法是kanji片假名模式编码二维码数据的算法。
+        返回的数据会编码成一种二进制字符串。
         """
         def two_bytes(data):
             """Output two byte character code as a single integer."""
@@ -275,8 +275,8 @@ class QRCodeBuilder:
 
 
     def add_data(self):
-        """This function properly constructs a QR code's data string. It takes
-        into account the interleaving pattern required by the standard.
+        """这个方法正确地建立一个二维码数据字符串。
+        负责二维码标准所需的插入模式。
         """
         #Encode the data into a QR code
         self.buffer.write(self.binary_string(self.mode, 4))
@@ -377,9 +377,9 @@ class QRCodeBuilder:
         self.buffer = data_buffer
 
     def terminate_bits(self, payload):
-        """This method adds zeros to the end of the encoded data so that the
-        encoded data is of the correct length. It returns a binary string
-        containing the bits to be added.
+        """这个方法一些0增加到编码完的数据尾部，
+        这样能保证编码完的数据是正确的长度。
+        返回含有加入的比特二进制字符串。
         """
         data_capacity = tables.data_capacity[self.version][self.error][0]
 
@@ -400,9 +400,9 @@ class QRCodeBuilder:
         return bits
 
     def delimit_words(self):
-        """This method takes the existing encoded binary string
-        and returns a binary string that will pad it such that
-        the encoded string contains only full bytes.
+        """这个方法得到现有的编码完的二进制字符串后，
+        返回的二进制字符串会堆叠，
+        这样编码完的字符串就只含有完整的字节。
         """
         bits_short = 8 - (len(self.buffer.getvalue()) % 8)
         
@@ -413,9 +413,9 @@ class QRCodeBuilder:
             return self.binary_string(0, bits_short)
 
     def add_words(self):
-        """The data block must fill the entire data capacity of the QR code.
-        If we fall short, then we must add bytes to the end of the encoded
-        data field. The value of these bytes are specified in the standard.
+        """这个方法确保数据块必须填充整个二维码的数据容量。
+        如果缺少数据，我们必须在编码完的数据区域尾部增加字节。
+        增加的这些字节都按照二维码标准来描述。
         """
 
         data_blocks = len(self.buffer.getvalue()) // 8
@@ -432,9 +432,9 @@ class QRCodeBuilder:
         return ''.join([next(block) for x in range(needed_blocks)])
 
     def make_error_block(self, block, block_number):
-        """This function constructs the error correction block of the
-        given data block. This is *very complicated* process. To
-        understand the code you need to read:
+        """这个方法建立了给出的数据块的错误纠正数据块。
+        这是*非常复杂*的过程。
+        要理解这里的代码你需要阅读如下网址提供的内容：
 
         * http://www.thonky.com/qr-code-tutorial/part-2-error-correction/
         * http://www.matchadesign.com/blog/qr-code-demystified-part-4/
@@ -495,7 +495,7 @@ class QRCodeBuilder:
         return mp_co
 
     def make_code(self):
-        """This method returns the best possible QR code."""
+        """这个方法返回最可能该有的二维码。"""
         from copy import deepcopy
 
         #Get the size of the underlying matrix
@@ -517,12 +517,12 @@ class QRCodeBuilder:
         self.code = self.masks[self.best_mask]
 
     def add_detection_pattern(self, m):
-        """This method add the detection patterns to the QR code. This lets
-        the scanner orient the pattern. It is required for all QR codes.
-        The detection pattern consists of three boxes located at the upper
-        left, upper right, and lower left corners of the matrix. Also, two
-        special lines called the timing pattern is also necessary. Finally,
-        a single black pixel is added just above the lower left black box.
+        """这个方法为二维码增加了检查模式。
+        这让二维码扫描器遵守模式，满足所有二维码的需求。
+        检测模式由3个盒子组成，分别位于矩阵的
+        左上角、右上角、左下角。
+        同时，两个特殊行名叫时间模式也是需要有的。
+        最后，一个黑色像素要正好增加到左下角黑色盒子的上面。
         """
 
         #Draw outer black box
@@ -577,9 +577,9 @@ class QRCodeBuilder:
         m[-8][8] = 1
 
     def add_position_pattern(self, m):
-        """This method draws the position adjustment patterns onto the QR
-        Code. All QR code versions larger than one require these special boxes
-        called position adjustment patterns.
+        """这个方法把位置调整模式绘制在二维码上。
+        所有需要这些特殊盒子的二维码版本号要大于1，
+        这些特殊盒子名叫位置调整模式。
         """
         #Version 1 does not have a position adjustment pattern
         if self.version == 1:
@@ -623,10 +623,10 @@ class QRCodeBuilder:
                         m[i+x][j-x] = 1
 
     def add_version_pattern(self, m):
-        """For QR codes with a version 7 or higher, a special pattern
-        specifying the code's version is required.
+        """这个方法是针对二维码版本号大于等于7而使用的，
+        一个特殊模式描述二维码所需要的版本号。
 
-        For further information see:
+        要了解更多这方面的信息，阅读如下网址内容：
         http://www.thonky.com/qr-code-tutorial/format-version-information/#example-of-version-7-information-string
         """
         if self.version < 7:
@@ -653,9 +653,10 @@ class QRCodeBuilder:
                 m[j][i] = bit
 
     def make_masks(self, template):
-        """This method generates all seven masks so that the best mask can
-        be determined. The template parameter is a code matrix that will
-        server as the base for all the generated masks.
+        """这个方法生产所有7种遮罩，
+        所以能够确定最好的遮罩。
+        其中 `template` 参数是一个二维码矩阵，
+        该矩阵是所有生成的遮罩的基础服务。
         """
         from copy import deepcopy
 
@@ -729,10 +730,10 @@ class QRCodeBuilder:
         return masks
 
     def choose_best_mask(self):
-        """This method returns the index of the "best" mask as defined by
-        having the lowest total penalty score. The penalty rules are defined
-        by the standard. The mask with the lowest total score should be the
-        easiest to read by optical scanners.
+        """这个方法返回 "最好的" 遮罩的索引位，
+        作为定义中拥有最低的合计惩罚分。
+        惩罚规则都定义在二维码标准中。
+        遮罩所含的最低合计分应该是被二维码视觉扫描器最容易读取的。
         """
         self.scores = []
         for n in range(len(self.masks)):
@@ -868,8 +869,8 @@ class QRCodeBuilder:
         return totals.index(min(totals))
 
     def add_type_pattern(self, m, type_bits):
-        """This will add the pattern to the QR code that represents the error
-        level and the type of mask used to make the code.
+        """这个方法把模式增加到二维码中，
+        表示错误纠正级别和产生二维码所用的遮罩类型。
         """
         field = iter(type_bits)
         for i in range(7):
@@ -905,14 +906,14 @@ class QRCodeBuilder:
 ##############################################################################
 
 def _get_writable(stream_or_path, mode):
-    """This method returns a tuple containing the stream and a flag to indicate
-    if the stream should be automatically closed.
+    """这个函数返回一个元组，
+    其中含有流数据和一个旗语来指明流数据是否应该自动关闭。
 
-    The `stream_or_path` parameter is returned if it is an open writable stream.
-    Otherwise, it treats the `stream_or_path` parameter as a file path and
-    opens it with the given mode.
+    如果是一个打开的可写流数据，其中 `stream_or_path` 参数会被返回。
+    否则，把 `stream_or_path` 参数处理成一个文件路径后用给出的模式来打开文件。
 
-    It is used by the svg and png methods to interpret the file parameter.
+    在 `svg` 和 `png` 方法使用这个函数时，
+    是为了解释 `file` 参数用的。
 
     :type stream_or_path: str | io.BufferedIOBase
     :type mode: str | unicode
@@ -926,29 +927,28 @@ def _get_writable(stream_or_path, mode):
 
 
 def _get_png_size(version, scale, quiet_zone=4):
-    """See: QRCode.get_png_size
+    """阅读： QRCode.get_png_size 文档字符串。
 
-    This function was abstracted away from QRCode to allow for the output of
-    QR codes during the build process, i.e. for debugging. It works
-    just the same except you must specify the code's version. This is needed
-    to calculate the PNG's size.
+    本函数是从 QRCode 中提取出来的，在建立过程中允许二维码输出。
+    例如，针对调试时。要想有效必须描述二维码的版本号。
+    计算 PNG 大小时也需要本函数。
     """
     #Formula: scale times number of modules plus the border on each side
     return (int(scale) * tables.version_size[version]) + (2 * quiet_zone * int(scale))
 
 
 def _terminal(code, module_color='default', background='reverse', quiet_zone=4):
-    """This method returns a string containing ASCII escape codes,
-    such that if printed to a terminal, it will display a vaild
-    QR code. The module_color and the background color should be keys
-    in the tables.term_colors table for printing using the 8/16
-    color scheme. Alternatively, they can be a number between 0 and
-    256 in order to use the 88/256 color scheme. Otherwise, a
-    ValueError will be raised.
+    """这个函数返回含有 ASCII 转义代码的字符串，
+    这样如果输出到终端里的话，会显示成一个合法的二维码。
+    其中 `module_color` 参数和 `background` 参数的颜色名
+    应该严格符合 `tables.term_colors` 数据表中的内容，
+    即使用 8/16 色彩机制。
+    另外，也可以是0到256之间的一个整数，
+    这样就可以使用 88/256 色彩机制。
+    否则，会抛出一个 `ValueError` 例外错误。
 
-    Note, the code is outputted by changing the background color. Then
-    two spaces are written to the terminal. Finally, the terminal is
-    reset back to how it was.
+    注意，改变 `background` 颜色输出二维码，
+    会有2个空间写入终端。最终终端会重置回自己的设置。
     """
     buf = io.StringIO()
 
@@ -1014,8 +1014,8 @@ def _terminal(code, module_color='default', background='reverse', quiet_zone=4):
     return buf.getvalue()
 
 def _text(code, quiet_zone=4):
-    """This method returns a text based representation of the QR code.
-    This is useful for debugging purposes.
+    """这个函数返回基于文本的二维码形式。
+    对于调试目的来说是有用的。
     """
     buf = io.StringIO()
 
@@ -1055,8 +1055,8 @@ def _text(code, quiet_zone=4):
     return buf.getvalue()
 
 def _xbm(code, scale=1, quiet_zone=4):
-    """This function will format the QR code as a X BitMap.
-    This can be used to display the QR code with Tkinter.
+    """这个函数会把二维码格式化成一种 X BitMap 比特映射形式。
+    可以用这个函数把二维码显示在 Tkinter 程序中。
     """
     try:
         str = unicode  # Python 2
@@ -1107,37 +1107,34 @@ def _xbm(code, scale=1, quiet_zone=4):
 def _svg(code, version, file, scale=1, module_color='#000', background=None,
          quiet_zone=4, xmldecl=True, svgns=True, title=None, svgclass='pyqrcode',
          lineclass='pyqrline', omithw=False, debug=False):
-    """This function writes the QR code out as an SVG document. The
-    code is drawn by drawing only the modules corresponding to a 1. They
-    are drawn using a line, such that contiguous modules in a row
-    are drawn with a single line. The file parameter is used to
-    specify where to write the document to. It can either be a writable (binary)
-    stream or a file path. The scale parameter is sets how large to draw
-    a single module. By default one pixel is used to draw a single
-    module. This may make the code to small to be read efficiently.
-    Increasing the scale will make the code larger. This method will accept
-    fractional scales (e.g. 2.5).
+    """这个函数把二维码写成一种 SVG 的 XML 文档形式。
+    二维码只把数据块绘制成1，是用一行来绘制数据块，
+    这样一行中的相邻数据块都会绘制在单行里。
+    其中 `file` 参数是描述存储文档位置用的。
+    参数值即可以是可写的（二进制）流数据，也可以是一个文件路径。
+    其中 `scale` 参数是设置单个数据块绘制多大用的。
+    默认值是1个像素绘制一个数据块。这会导致二维码太小无法有效读取。
+    增加标量参数值会让二维码变大。参数值接受分数标量值（例如2.5）。
 
-    :param module_color: Color of the QR code (default: ``#000`` (black))
-    :param background: Optional background color.
-            (default: ``None`` (no background))
-    :param quiet_zone: Border around the QR code (also known as  quiet zone)
-            (default: ``4``). Set to zero (``0``) if the code shouldn't
-            have a border.
-    :param xmldecl: Inidcates if the XML declaration header should be written
-            (default: ``True``)
-    :param svgns: Indicates if the SVG namespace should be written
-            (default: ``True``)
-    :param title: Optional title of the generated SVG document.
-    :param svgclass: The CSS class of the SVG document
-            (if set to ``None``, the SVG element won't have a class).
-    :param lineclass: The CSS class of the path element
-            (if set to ``None``, the path won't have a class).
-    :param omithw: Indicates if width and height attributes should be
-            omitted (default: ``False``). If these attributes are omitted,
-            a ``viewBox`` attribute will be added to the document.
-    :param debug: Inidicates if errors in the QR code should be added to the
-            output (default: ``False``).
+    :param module_color: 二维码的颜色 (默认值是： ``#000`` (黑色))
+    :param background: 可选的背景色。
+            (默认值是： ``None`` (无色透明))
+    :param quiet_zone: 二维码周围的边界宽 (无噪点区域)
+            (默认值是： ``4``)。如果二维码不要边界宽就设置成 (``0``)。
+    :param xmldecl: 指明是否要增加 XML 声明头部内容。
+            (默认值是： ``True``)
+    :param svgns: 指明是否增加 SVG 名字空间
+            (默认值是： ``True``)
+    :param title: 可选的 SVG 文档抬头内容。
+    :param svgclass: SVG 文档的 CSS 类
+            (如果参数值是 ``None`` 的话， SVG 元素就没有一个类了)。
+    :param lineclass: 路径元素的 CSS 类
+            (如果参数值是 ``None`` 的话，SVG path 元素就没有一个类了)。
+    :param omithw: 指明是否忽略属性的宽和高
+            (默认值是： ``False``)。如果忽略这些属性的话，
+            一个 ``viewBox`` 属性会加入到文档中去。
+    :param debug: 指明如果二维码中有错误的话，是否应该加入到输出结果里去
+            (默认值是： ``False``)。
     """
     from functools import partial
     from xml.sax.saxutils import quoteattr
@@ -1243,25 +1240,23 @@ def _svg(code, version, file, scale=1, module_color='#000', background=None,
 
 def _png(code, version, file, scale=1, module_color=(0, 0, 0, 255),
          background=(255, 255, 255, 255), quiet_zone=4, debug=False):
-    """See: pyqrcode.QRCode.png()
+    """阅读： pyqrcode.QRCode.png() 文档字符串。
 
-    This function was abstracted away from QRCode to allow for the output of
-    QR codes during the build process, i.e. for debugging. It works
-    just the same except you must specify the code's version. This is needed
-    to calculate the PNG's size.
+    这个函数提取自 QRCode ，在建立过程中允许二维码的输出。
+    例如调试的时候。要想正常工作必须描述二维码版本号。
+    计算 PNG 大小时也会用到本函数。
 
-    This method will write the given file out as a PNG file. Note, it
-    depends on the PyPNG module to do this.
+    这个函数会把提供的 `path` 参数值写成一个 PNG 文件。
+    注意，需要用到 PyPNG 模块来实现这个函数。
 
-    :param module_color: Color of the QR code (default: ``(0, 0, 0, 255)`` (black))
-    :param background: Optional background color. If set to ``None`` the PNG
-            will have a transparent background.
-            (default: ``(255, 255, 255, 255)`` (white))
-    :param quiet_zone: Border around the QR code (also known as quiet zone)
-            (default: ``4``). Set to zero (``0``) if the code shouldn't
-            have a border.
-    :param debug: Inidicates if errors in the QR code should be added (as red
-            modules) to the output (default: ``False``).
+    :param module_color: 二维码的颜色 (默认值是： ``(0, 0, 0, 255)`` (黑色))
+    :param background: 可选的背景色。如果参数值是 ``None`` 的话，
+            PNG 会有透明背景。
+            (默认值是： ``(255, 255, 255, 255)`` (白色))
+    :param quiet_zone: 二维码的边界宽 (无噪点区域)
+            (默认值是： ``4``)。如果不需要边界宽参数值设置成 (``0``) 。
+    :param debug: 指明如果二维码中有错误的话，是否应该增加 (红色数据块)
+            到输出结果中 (默认值是： ``False``)。
     """
     import png
     
@@ -1272,10 +1267,9 @@ def _png(code, version, file, scale=1, module_color=(0, 0, 0, 255),
         raise ValueError('The scale parameter must be an integer')
 
     def scale_code(size):
-        """To perform the scaling we need to inflate the number of bits.
-        The PNG library expects all of the bits when it draws the PNG.
-        Effectively, we double, tripple, etc. the number of columns and
-        the number of rows.
+        """要执行标量化，我们需要增加比特的数量。
+        当 `png` 库绘制 PNG 图像时期望得到所有的比特。
+        有效率地做法是，我们用2倍、3倍，等等倍数作用在列数量和行数量上。
         """
         # This is one row's worth of each possible module
         # PNG's use 0 for black and 1 for white, this is the
@@ -1326,12 +1320,12 @@ def _png(code, version, file, scale=1, module_color=(0, 0, 0, 255),
         return bits
 
     def png_pallete_color(color):
-        """This creates a palette color from a list or tuple. The list or
-        tuple must be of length 3 (for rgb) or 4 (for rgba). The values
-        must be between 0 and 255. Note rgb colors will be given an added
-        alpha component set to 255.
+        """这里从一个列表或一个元组建立一个调色板。
+        列表或元组必须是长度3 (rgb) 或长度4 (rgba)。
+        取值必须在0和255之间。
+        注意，rgb颜色加上一个alpha成份要设置成255。
 
-        The pallete color is represented as a list, this is what is returned.
+        调色板表示成一个元组，返回的也就是这个元组。
         """
         if color is None:
             return ()
@@ -1393,27 +1387,24 @@ def _png(code, version, file, scale=1, module_color=(0, 0, 0, 255),
 
 def _eps(code, version, file_or_path, scale=1, module_color=(0, 0, 0),
          background=None, quiet_zone=4):
-    """This function writes the QR code out as an EPS document. The
-    code is drawn by drawing only the modules corresponding to a 1. They
-    are drawn using a line, such that contiguous modules in a row
-    are drawn with a single line. The file parameter is used to
-    specify where to write the document to. It can either be a writable (text)
-    stream or a file path. The scale parameter is sets how large to draw
-    a single module. By default one point (1/72 inch) is used to draw a single
-    module. This may make the code to small to be read efficiently.
-    Increasing the scale will make the code larger. This function will accept
-    fractional scales (e.g. 2.5).
+    """这个函数是把二维码写成一种 EPS 文档格式。
+    二维码只把数据块绘制成1，使用一行来绘制数据块，
+    这样一行中相邻的数据块都会绘制在单行里。
+    其中 `file_or_path` 参数是描述存储文档的位置用的。
+    参数值即可以是可写的 (文本) 流数据，也可以是一个文件路径。
+    其中 `scale` 参数是设置绘制一个数据块要多大。
+    默认值是1个像素点 (1/72 英寸) 绘制一个数据块。
+    这也许会让二维码太小而无法有效读取。
+    增加参数值会让二维码变大。参数值也可以是分数标量值（例如2.5）。
 
-    :param module_color: Color of the QR code (default: ``(0, 0, 0)`` (black))
-            The color can be specified as triple of floats (range: 0 .. 1) or
-            triple of integers (range: 0 .. 255) or as hexadecimal value (i.e.
-            ``#36c`` or ``#33B200``).
-    :param background: Optional background color.
-            (default: ``None`` (no background)). See `module_color` for the
-            supported values.
-    :param quiet_zone: Border around the QR code (also known as  quiet zone)
-            (default: ``4``). Set to zero (``0``) if the code shouldn't
-            have a border.
+    :param module_color: 二维码的颜色 (默认值是： ``(0, 0, 0)`` (黑色))
+            参数值可以描述成三个浮点数 (范围介于： 0 到 1) 或者
+            描述成三个整数 (范围介于： 0 到 255) 又或者
+            描述成十六进制值 (例如， ``#36c`` 或 ``#33B200``)。
+    :param background: 可选的背景色。
+            (默认值是： ``None`` (无色透明))。 阅读 `module_color` 了解所支持的值信息。
+    :param quiet_zone: 二维码边界宽 (无噪点区域)
+            (默认值是： ``4``)。如果不需要边界设置成 (``0``) 即可。
     """
     from functools import partial
     import time
@@ -1421,7 +1412,7 @@ def _eps(code, version, file_or_path, scale=1, module_color=(0, 0, 0),
 
     def write_line(writemeth, content):
         """\
-        Writes `content` and ``LF``.
+        写入 `content` 和 ``LF`` 字符。
         """
         # Postscript: Max. 255 characters per line
         for line in textwrap.wrap(content, 255):
@@ -1430,7 +1421,7 @@ def _eps(code, version, file_or_path, scale=1, module_color=(0, 0, 0),
 
     def line(offset, length):
         """\
-        Returns coordinates to draw a line with the provided length.
+        返回提供的长度绘制一行的坐标。
         """
         res = ''
         if offset > 0:
@@ -1440,7 +1431,7 @@ def _eps(code, version, file_or_path, scale=1, module_color=(0, 0, 0),
 
     def rgb_to_floats(color):
         """\
-        Converts the provided color into an acceptable format for Postscript's
+        把颜色转换成一个对于 Postscript 可接受的格式
          ``setrgbcolor``
         """
         def to_float(clr):
@@ -1516,8 +1507,7 @@ def _eps(code, version, file_or_path, scale=1, module_color=(0, 0, 0),
 
 def _hex_to_rgb(color):
     """\
-    Helper function to convert a color provided in hexadecimal format
-    as RGB triple.
+    这是一个辅助函数，用来把一个颜色转换成十六进制格式的 RGB 颜色值。
     """
     if color[0] == '#':
         color = color[1:]

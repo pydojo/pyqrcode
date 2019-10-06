@@ -52,70 +52,60 @@ except NameError:
     pass
 
 def create(content, error='H', version=None, mode=None, encoding=None):
-    """When creating a QR code only the content to be encoded is required,
-    all the other properties of the code will be guessed based on the
-    contents given. This function will return a :class:`QRCode` object.
+    """当建立一个二维码时，只有内容是需要进行编码的，
+    其他所有二维码的财产项会根据内容来进行选择适合的财产值。
+    这个函数会返回一个 :class:`QRCode` 类的实例对象。
 
-    Unless you are familiar with QR code's inner workings
-    it is recommended that you just specify the *content* and nothing else.
-    However, there are cases where you may want to specify the various
-    properties of the created code manually, this is what the other
-    parameters do. Below, you will find a lengthy explanation of what
-    each parameter is for. Note, the parameter names and values are taken
-    directly from the standards. You may need to familiarize yourself
-    with the terminology of QR codes for the names and their values to
-    make sense.
+    除非你非常熟悉二维码的内部工作原理，否则建议你只通过描述
+    *内容*来建立二维码，其它的都别动。不管如何做到的，
+    有一些情况是你想要描述一些不同的财产值来手动建立二维码，
+    这也是除了内容参数以外的参数有用的地方。
+    注意，参数名于参数值都直接来自二维码的技术标准。
+    你也许需要自己去熟悉一下二维码标准，然后了解二维码的术语，
+    这样对于其它参数的名字和参数值就有了正确的理解。
 
-    The *error* parameter sets the error correction level of the code. There
-    are four levels defined by the standard. The first is level 'L' which
-    allows for 7% of the code to be corrected. Second, is level 'M' which
-    allows for 15% of the code to be corrected. Next, is level 'Q' which
-    is the most common choice for error correction, it allow 25% of the
-    code to be corrected. Finally, there is the highest level 'H' which
-    allows for 30% of the code to be corrected. There are several ways to
-    specify this parameter, you can use an upper or lower case letter,
-    a float corresponding to the percentage of correction, or a string
-    containing the percentage. See tables.modes for all the possible
-    values. By default this parameter is set to 'H' which is the highest
-    possible error correction, but it has the smallest available data
-    capacity.
+    其中 *error* 参数是设置二维码错误纠正级别用的。
+    二维码标准中定义了4个级别：
+    第一级 'L' 是 7% 的错误纠正率。
+    第二级 'M' 是 15% 的错误纠正率。
+    第三级 'Q' 是 25% 的错误纠正率，也是共同使用的一个级别。
+    第四级 'H' 是 30% 的错误纠正率。
+    描述这项参数有许多方法，你可以使用大写，也可以使用小写字母，
+    更可以使用错误纠正率的对应浮点数，还可以是百分比字符串形式。
+    阅读 `tables.modes` 来了解所有可能的值内容。
+    默认参数值是 'H' ，虽然是最高的错误纠正率，但数据容量也是最小的。
 
-    The *version* parameter specifies the size and data capacity of the
-    code. Versions are any integer between 1 and 40. Where version 1 is
-    the smallest QR code, and version 40 is the largest. If this parameter
-    is left unspecified, then the contents and error correction level will
-    be used to guess the smallest possible QR code version that the
-    content will fit inside of. You may want to specify this parameter
-    for consistency when generating several QR codes with varying amounts
-    of data. That way all of the generated codes would have the same size.
+    其中 *version* 参数是描述二维码尺寸和数据容量用的。
+    版本都是任意一个1到40之间的整数。其中版本值是1表示最小的二维码，
+    版本值是40是最大的二维码。如果不描述参数值的话，二维码的内容和
+    错误纠正级别会尽可能选择满足二维码内容的最低版本值。
+    你也许想要描述版本参数值，当生成许多数据量不一样的二维码时都用一样的值。
+    这样可以批量产生的二维码尺寸都一样。
 
-    The *mode* parameter specifies how the contents will be encoded. By
-    default, the best possible mode for the contents is guessed. There
-    are four possible modes. First, is 'numeric' which is
-    used to encode integer numbers. Next, is 'alphanumeric' which is
-    used to encode some ASCII characters. This mode uses only a limited
-    set of characters. Most problematic is that it can only use upper case
-    English characters, consequently, the content parameter will be
-    subjected to str.upper() before encoding. See tables.ascii_codes for
-    a complete list of available characters. The is 'kanji' mode can be
-    used for Japanese characters, but only those that can be understood
-    via the shift-jis string encoding. Finally, we then have 'binary' mode
-    which just encodes the bytes directly into the QR code (this encoding
-    is the least efficient).
+    其中 *mode* 参数是描述二维码内容会如何进行编码的。
+    默认值是根据二维码内容选择最可能的模式。
+    这里有4种可用的模式：
+    第一种 'numeric' 是用来编码整数的。
+    第二种 'alphanumeric' 是用来编码一些 ASCII 字符的。这种模式使用
+    时有一项限制，就是英语字母全大写，当然内容参数值要先使用字符串
+    `str.upper()` 方法处理完内容后再进行编码。阅读 `tables.ascii_codes`
+    文档了解完整的可用字符清单。
+    第三种 'kanji' 是用来编码日语片假名的。
+    第四种 'binary' 是直接把字节编码到二维码里（这种编码模式是最没有效率的）。
 
-    The *encoding* parameter specifies how the content will be interpreted.
-    This parameter only matters if the *content* is a string, unicode, or
-    byte array type. This parameter must be a valid encoding string or None. 
-    t will be passed the *content*'s encode/decode methods.
+    其中 *encoding* 参数是描述如何解释二维码内容的。
+    本参数只在乎 *content* 参数值是字符串、 unicode、或字节阵列数据类型。
+    参数值必须是一种合法的编码字符串，或是 `None` 值。
+    这会代入到 *content* 内容参数值的 `encode` 和 `decode` 方法中。
     """
     return QRCode(content, error, version, mode, encoding)
 
 class QRCode:
-    """This class represents a QR code. To use this class simply give the
-    constructor a string representing the data to be encoded, it will then
-    build a code in memory. You can then save it in various formats. Note,
-    codes can be written out as PNG files but this requires the PyPNG module.
-    You can find the PyPNG module at http://packages.python.org/pypng/.
+    """这个类是用来表示一个二维码用的。
+    要使用这个类，直接在构造器中给出一个字符串形式的数据来完成编码工作，
+    这个类然后会在内存中建立一个二维码。接着你可以保存成不同的格式文件。
+    注意，二维码可以写成 PNG 图片文件，但需要安装 `pypng` 模块。
+    你可以在 PyPNG 模块主页找到它 http://packages.python.org/pypng/
 
     Examples:
         >>> from pyqrcode import QRCode
@@ -127,8 +117,8 @@ class QRCode:
         >>> number.png('big-number.png')
 
     .. note::
-        For what all of the parameters do, see the :func:`pyqrcode.create`
-        function.
+        对于类初始化中的参数能做什么，阅读 :func:`pyqrcode.create`
+        函数的文档字符串。
     """
     def __init__(self, content, error='H', version=None, mode=None,
                  encoding='iso-8859-1'):
@@ -238,17 +228,16 @@ class QRCode:
                 .format(repr(self.data), self.error, self.version, self.mode)
 
     def _detect_content_type(self, content, encoding):
-        """This method tries to auto-detect the type of the data. It first
-        tries to see if the data is a valid integer, in which case it returns
-        numeric. Next, it tests the data to see if it is 'alphanumeric.' QR
-        Codes use a special table with very limited range of ASCII characters.
-        The code's data is tested to make sure it fits inside this limited
-        range. If all else fails, the data is determined to be of type
-        'binary.'
+        """这是一个实例方法，尽力自动检测数据类型。
+        第一，先试着搞清楚数据是否是一种合法的整数，这种情况下本方法会返回数字。
+        第二，测试数据是否是 'alphanumeric' 字母数字组合类型的二维码，使用
+        一张特殊的数据表，其中含有二维码技术标准限制的 ASCII 字符范围。
+        二维码数据会经过测试来确定是否在这个范围内。如果测试都失败，数据会
+        采用 'binary' 二进制类型。
         
-        Returns a tuple containing the detected mode and encoding.
+        返回一个元组，其中两个元素是检测到的模式和编码格式。
 
-        Note, encoding ECI is not yet implemented.
+        注意，二维码标准中的 ECI 编码格式还没有部署。
         """
         def two_bytes(c):
             """Output two byte character code as a single integer."""
@@ -330,8 +319,8 @@ class QRCode:
         return 'binary', encoding
 
     def _pick_best_fit(self, content):
-        """This method return the smallest possible QR code version number
-        that will fit the specified data with the given error level.
+        """这个实例方法返回尽可能最小的版本号。
+        版本号会根据给出的错误纠正级别来满足所描述的数据内容。
         """
         import math
         
@@ -352,21 +341,19 @@ class QRCode:
 
     def show(self, wait=1.2, scale=10, module_color=(0, 0, 0, 255),
             background=(255, 255, 255, 255), quiet_zone=4):
-        """Displays this QR code.
+        """这个实例方法是显示二维码用的。
 
-        This method is mainly intended for debugging purposes.
+        这个方法的主要目的是为了调试用。
 
-        This method saves the output of the :py:meth:`png` method (with a default
-        scaling factor of 10) to a temporary file and opens it with the
-        standard PNG viewer application or within the standard webbrowser. The
-        temporary file is deleted afterwards.
+        这个方法把 :py:meth:`png` 方法的输出结果（使用默认标量因数值10）
+        保存到一个临时文件中，然后用标准的 PNG 阅读器应用程序打开图片文件，
+        或者用标准的网页浏览器来打开图片。临时文件稍后会被删除掉。
 
-        If this method does not show any result, try to increase the `wait`
-        parameter. This parameter specifies the time in seconds to wait till
-        the temporary file is deleted. Note, that this method does not return
-        until the provided amount of seconds (default: 1.2) has passed.
+        如果这个方法没有显示任何结果的话，尝试增加 `wait` 参数值。
+        这个等待参数是用来描述多少秒，就是几秒后删除临时文件。
+        注意，这个方法没有返回语句，直到提供的秒数（默认值是1.2）代入后。
 
-        The other parameters are simply passed on to the `png` method.
+        其它的参数都直接传递给 `png` 方法。
         """
         import os
         import time
@@ -389,20 +376,17 @@ class QRCode:
         os.unlink(f.name)
         
     def get_png_size(self, scale=1, quiet_zone=4):
-        """This is method helps users determine what *scale* to use when
-        creating a PNG of this QR code. It is meant mostly to be used in the
-        console to help the user determine the pixel size of the code
-        using various scales.
+        """这个实例方法是帮助用户确定使用多少 *scale* 标量用的。
+        当建立二维码的 PNG 文件时，标量用在终端里可以帮助用户确定
+        二维码的像素尺寸，使用不同的标量值，二维码像素尺寸也不一样。
 
-        This method will return an integer representing the width and height of
-        the QR code in pixels, as if it was drawn using the given *scale*.
-        Because QR codes are square, the number represents both the width
-        and height dimensions.
+        这个方法会返回一个整数，表示二维码像素的宽和高。
+        如果使用给出 *scale* 标量来绘制二维码，你就知道相应的像素大小是多少。
+        由于二维码是正方形，数字表示了空间的宽和高。
 
-        The *quiet_zone* parameter sets how wide the quiet zone around the code
-        should be. According to the standard this should be 4 modules. It is
-        left settable because such a wide quiet zone is unnecessary in many
-        applications where the QR code is not being printed.
+        其中 *quiet_zone* 参数是设置二维码周围的无噪点区域有多宽。
+        根据二维码标准，无噪点区域应该是4个数据块宽。把这个作为可设置的，
+        是因为这种无噪点区域的宽在许多应用程序中是不需要的，因为很少会打印二维码。
 
         Example:
             >>> code = pyqrcode.QRCode("I don't like spam!")
@@ -415,42 +399,38 @@ class QRCode:
 
     def png(self, file, scale=1, module_color=(0, 0, 0, 255),
             background=(255, 255, 255, 255), quiet_zone=4):
-        """This method writes the QR code out as an PNG image. The resulting
-        PNG has a bit depth of 1. The file parameter is used to specify where
-        to write the image to. It can either be an writable stream or a
-        file path.
+        """这个实例方法是把二维码写成一个 PNG 图片文件。
+        作为 PNG 结果会有1个深度。
+        其中 `file` 位置参数是用来描述图片存储到哪里，参数值即可以是
+        一种可写的流数据，也可以是一个文件路径。
 
         .. note::
-            This method depends on the pypng module to actually create the
-            PNG file.
+            这个方法的使用要依赖 `pypng` 模块，所以要安装模块后才能真正建立 PNG 文件。
 
-        This method will write the given *file* out as a PNG file. The file
-        can be either a string file path, or a writable stream. The file
-        will not be automatically closed if a stream is given.
+        这个方法会把给出的 *file* 参数值写成一个 PNG 文件。
+        参数值可以是字符串文件路径，也可以是一个可写的流数据。
+        如果使用流数据的话，参数 `file` 不会自动关闭。
 
-        The *scale* parameter sets how large to draw a single module. By
-        default one pixel is used to draw a single module. This may make the
-        code too small to be read efficiently. Increasing the scale will make
-        the code larger. Only integer scales are usable. This method will
-        attempt to coerce the parameter into an integer (e.g. 2.5 will become 2,
-        and '3' will become 3). You can use the :py:meth:`get_png_size` method
-        to calculate the actual pixel size of the resulting PNG image.
+        其中 *scale* 参数是设置对一个数据块要绘制多大。
+        默认参数值是一个数据块绘制1个像素。这也许会让二维码看起来太小，
+        导致无法有效读取二维码。增加 `scale` 参数值会让二维码变大。
+        参数值只可以使用整数。这个方法会把参数值都变成整数（例如，
+        2.5会变成2，3会变成3）。
+        你可以使用 :py:meth:`get_png_size` 方法来计算 PNG 图片的实际像素大小。
 
-        The *module_color* parameter sets what color to use for the encoded
-        modules (the black part on most QR codes). The *background* parameter
-        sets what color to use for the background (the white part on most
-        QR codes). If either parameter is set, then both must be
-        set or a ValueError is raised. Colors should be specified as either
-        a list or a tuple of length 3 or 4. The components of the list must
-        be integers between 0 and 255. The first three member give the RGB
-        color. The fourth member gives the alpha component, where 0 is
-        transparent and 255 is opaque. Note, many color
-        combinations are unreadable by scanners, so be judicious.
+        其中 *module_color* 参数是设置用什么颜色来对数据块进行编码。
+        （绝大部分二维码数据块都是黑色）。
+        其中 *background* 参数是设置背景色（大部分二维码用白色）。
+        如果设置这两个参数中的一个，那就都要手动分配参数值，
+        否则会抛出 `ValueError` 例外错误。颜色值应该描述成列表或元组，
+        长度为3或4，其中每个元素值是0到255的整数。
+        三个元素长度的参数值是 RGB 色，四个元素长度的参数值 RGBA 色，
+        增加了一个透明度，alpha 成份，0表示透明，255表示不透明。
+        注意，许多颜色组合都是无法被二维码扫描器读取的，所以慎用着色特性。
 
-        The *quiet_zone* parameter sets how wide the quiet zone around the code
-        should be. According to the standard this should be 4 modules. It is
-        left settable because such a wide quiet zone is unnecessary in many
-        applications where the QR code is not being printed.
+        其中 *quiet_zone* 无噪点区域参数是设置二维码周围的宽度。
+        根据二维码标准，这个宽度应该是4个数据块。保留成可设置是因为
+        许多应用程序不需要这个无噪点区域宽度，因为很少需要打印二维码。
 
         Example:
             >>> code = pyqrcode.create('Are you suggesting coconuts migrate?')
@@ -464,21 +444,19 @@ class QRCode:
 
     def png_as_base64_str(self, scale=1, module_color=(0, 0, 0, 255),
                           background=(255, 255, 255, 255), quiet_zone=4):
-        """This method uses the png render and returns the PNG image encoded as
-        base64 string. This can be useful for creating dynamic PNG images for
-        web development, since no file needs to be created.
+        """这个实例方法使用 png 渲染器后返回编码成 base64 字符串格式的 PNG 图片。
+        对于建立动态 PNG 图片来说是有用的，常应用在网络开发中，因为不需要建立文件。
         
         Example:
             >>> code = pyqrcode.create('Are you suggesting coconuts migrate?')
             >>> image_as_str = code.png_as_base64_str(scale=5)
             >>> html_img = '<img src="data:image/png;base64,{}">'.format(image_as_str)
 
-        The parameters are passed directly to the :py:meth:`png` method. Refer
-        to that method's documentation for the meaning behind the parameters.
+        所有参数都会直接传递给 :py:meth:`png` 方法，对于参数的意义参考
+        `png` 方法文档字符串。
         
         .. note::
-            This method depends on the pypng module to actually create the
-            PNG image.
+            注意这个方法要依赖 `pypng` 模块，所以才能真正建立 PNG 图片格式。
 
         """
         import io
@@ -491,15 +469,13 @@ class QRCode:
         return image_as_str
         
     def xbm(self, scale=1, quiet_zone=4):
-        """Returns a string representing an XBM image of the QR code.
-        The XBM format is a black and white image format that looks like a
-        C header file. 
+        """这个实例方法返回一种 XBM 图片格式的二维码字符串。
+        对于 XBM 格式来说，这是一种黑白图片格式，看起来像一个 C 头部文件一样。
         
-        Because displaying QR codes in Tkinter is the
-        primary use case for this renderer, this method does not take a file
-        parameter. Instead it retuns the rendered QR code data as a string.
+        因为在 Tkinter 中来显示二维码，所以主要用这种渲染器，
+        这个方法不会得到一个 `file` 参数。而是把渲染完的二维码数据返回成一种字符串形式。
         
-        Example of using this renderer with Tkinter:
+        在 Tkinter 中使用这个渲染器的例子如下：
             >>> import pyqrcode
             >>> import tkinter
             >>> code = pyqrcode.create('Knights who say ni!')
@@ -513,18 +489,16 @@ class QRCode:
             >>> label.pack()
 
         
-        The *scale* parameter sets how large to draw a single module. By
-        default one pixel is used to draw a single module. This may make the
-        code too small to be read efficiently. Increasing the scale will make
-        the code larger. Only integer scales are usable. This method will
-        attempt to coerce the parameter into an integer (e.g. 2.5 will become 2,
-        and '3' will become 3). You can use the :py:meth:`get_png_size` method
-        to calculate the actual pixel size of this image when displayed.
+        其中 *scale* 参数是设置一个数据块要绘制多大。
+        默认值是使用1个像素绘制一个数据块。这会让二维码太小无法有效读取。
+        增加参数值回让二维码变大。只接受整数作为参数值。
+        这个方法回把标量参数值归为一个整数（例如2.5会变成2，3变成3）。
+        你可以使用 :py:meth:`get_png_size` 方法来计算显示图片时的实际像素大小。
 
-        The *quiet_zone* parameter sets how wide the quiet zone around the code
-        should be. According to the standard this should be 4 modules. It is
-        left settable because such a wide quiet zone is unnecessary in many
-        applications where the QR code is not being printed.
+        其中 *quiet_zone* 参数是设置二维码周围的无噪点区域有多宽。
+        根据二维码标准这个参数值应该是4个数据块。保留成可设置是因为
+        这样的一种无噪点区域宽度在许多应用程序中是不需要的，因为很少
+        打印二维码。
         """
         return builder._xbm(self.code, scale, quiet_zone)
 
@@ -532,49 +506,45 @@ class QRCode:
             quiet_zone=4, xmldecl=True, svgns=True, title=None,
             svgclass='pyqrcode', lineclass='pyqrline', omithw=False,
             debug=False):
-        """This method writes the QR code out as an SVG document. The
-        code is drawn by drawing only the modules corresponding to a 1. They
-        are drawn using a line, such that contiguous modules in a row
-        are drawn with a single line.
+        """这个实例方法是把二维码写成一种 SVG 文档格式。
+        二维码只会把数据块绘制成1。数据块都会用一行来绘制，
+        例如一行中的连续数据块都会绘制在单行里。
 
-        The *file* parameter is used to specify where to write the document
-        to. It can either be a writable stream or a file path.
+        其中 *file* 参数是用来描述存储文件位置用的。
+        即可以是可写的流数据，也可以是一个文件路径。
         
-        The *scale* parameter sets how large to draw
-        a single module. By default one pixel is used to draw a single
-        module. This may make the code too small to be read efficiently.
-        Increasing the scale will make the code larger. Unlike the png() method,
-        this method will accept fractional scales (e.g. 2.5).
+        其中 *scale* 参数是设置单个数据块要绘制多大。
+        默认值是用1个像素绘制一个数据块。也许会让二维码太小无法有效读取。
+        增加参数值会让二维码变大。与 `png()` 方法不一样，
+        这个方法回接受分数标量值（例如，2.5）。
 
-        Note, three things are done to make the code more appropriate for
-        embedding in a HTML document. The "white" part of the code is actually
-        transparent. The code itself has a class given by *svgclass* parameter. 
-        The path making up the QR code uses the class set using the *lineclass*.
-        These should make the code easier to style using CSS.
+        注意，有三件事实现后能建立适合嵌入到 HTML 文档中的二维码。
+        那就是二维码的 "白色" 部分要完全透明。
+        二维码本身有一个已知类 *svgclass* 参数。
+        组成二维码的路径使用这个类设置，使用的是 *lineclass* 参数。
+        这些因素让建立二维码更容易使用 CSS 风格。
 
-        By default the output of this function is a complete SVG document. If
-        only the code itself is desired, set the *xmldecl* to false. This will
-        result in a fragment that contains only the "drawn" portion of the code.
-        Likewise, you can set the *title* of the document. The SVG name space
-        attribute can be suppressed by setting *svgns* to False.
+        这个方法的默认输出结果是一个含有完整的 SVG 的 XML 文档。
+        如果只想要二维码本身的话，把 *xmldecl* 参数值设置成 `False` 即可。
+        这样会形成一个含有只绘制二维码部分的 SVG 片段。
+        同时，你可以设置 *title* 参数给文档提供页面抬头内容。
+        对于 SVG 名字空间属性可以通过设置 *svgns* 参数值为 `False` 来
+        实现不显示二维码图形，只显示 XML 文档树内容。
 
-        When True the *omithw* indicates if width and height attributes should
-        be omitted. If these attributes are omitted, a ``viewBox`` attribute
-        will be added to the document.
+        其中 *omithw* 参数值设置成 `True` 会说明要忽略宽高属性。
+        那么会有一项 ``viewBox`` 属性增加到 XML 文档中，效果就是
+        页面中有一个类似全屏的二维码图像了。
 
-        You can also set the colors directly using the *module_color* and
-        *background* parameters. The *module_color* parameter sets what color to
-        use for the data modules (the black part on most QR codes). The
-        *background* parameter sets what color to use for the background (the
-        white part on most QR codes). The parameters can be set to any valid
-        SVG or HTML color. If the background is set to None, then no background
-        will be drawn, i.e. the background will be transparent. Note, many color
-        combinations are unreadable by scanners, so be careful.
+        你也可以直接设置颜色，使用 *module_color* 和 *background* 参数。
+        其中 *module_color* 参数是设置数据块要使用的颜色（大部分都是黑色）。
+        其中 *background* 参数是设置背景色（大部分都是白色）。
+        这两个参数可以设置成任何一种合法的 SVG 或 HTML 安全色。
+        如果背景参数值设置成 `None` 的话，不会绘制背景色，例如背景色是透明的。
+        注意，许多颜色组合都不会被二维码扫描器读取，所以用色要谨慎。
 
-        The *quiet_zone* parameter sets how wide the quiet zone around the code
-        should be. According to the standard this should be 4 modules. It is
-        left settable because such a wide quiet zone is unnecessary in many
-        applications where the QR code is not being printed.
+        其中 *quiet_zone* 参数是设置无噪点区域宽应该是多大。
+        根据二维码标准这个参数值应该是4个数据卡宽。保留成可设置是因为许多应用
+        程序中不需要无噪点区域宽，因为很少会打印二维码。
         
         Example:
             >>> code = pyqrcode.create('Hello. Uhh, can we have your liver?')
@@ -590,28 +560,25 @@ class QRCode:
 
     def eps(self, file, scale=1, module_color=(0, 0, 0),
             background=None, quiet_zone=4):
-        """This method writes the QR code out as an EPS document. The
-        code is drawn by only writing the data modules corresponding to a 1.
-        They are drawn using a line, such that contiguous modules in a row
-        are drawn with a single line.
+        """这个实例方法是把二维码写成一种 EPS 文档。
+        二维码的绘制只把数据块写成1。数据块绘制成行，这样一行里相邻的数据块
+        都会绘制在单行里。
 
-        The *file* parameter is used to specify where to write the document
-        to. It can either be a writable (text) stream or a file path.
+        其中 *file* 参数是用来描述文档的存储位置用的。
+        参数值即可以是可写的（文本）流数据，也可以是一个文件路径。
 
-        The *scale* parameter sets how large to draw a single module. By
-        default one point (1/72 inch) is used to draw a single module. This may
-        make the code to small to be read efficiently. Increasing the scale
-        will make the code larger. This method will accept fractional scales
-        (e.g. 2.5).
+        其中 *scale* 参数是设置一个数据块绘制多大用的。
+        参数默认值是1点（1/72 英寸）绘制一个数据块。这可能让二维码太小无法有效读取。
+        增加标量参数值会让二维码变大。这个参数值可以是分数标量值（例如，2.5）。
 
-        The *module_color* parameter sets the color of the data modules. The
-        *background* parameter sets the background (page) color to use. They
-        are specified as either a triple of floats, e.g. (0.5, 0.5, 0.5), or a
-        triple of integers, e.g. (128, 128, 128). The default *module_color* is
-        black. The default *background* color is no background at all.
+        其中 *module_color* 参数是设置数据块的颜色用的。
+        其中 *background* 参数是设置背景色（页面颜色）用的。
+        这两个与颜色有关的参数值即可以描述成三个浮点数形式 (0.5, 0.5, 0.5)，
+        也可以描述成三个整数形式 (128, 128, 128)。
+        其中 *module_color* 参数值默认是黑色， *background* 参数默认值透明色。
 
-        The *quiet_zone* parameter sets how large to draw the border around
-        the code. As per the standard, the default value is 4 modules.
+        其中 *quiet_zone* 参数是设置二维码边界多宽用的。
+        由于二维码标准，默认值是4个数据块。
 
         Examples:
             >>> qr = pyqrcode.create('Hello world')
@@ -625,45 +592,39 @@ class QRCode:
 
     def terminal(self, module_color='default', background='reverse',
                  quiet_zone=4):
-        """This method returns a string containing ASCII escape codes,
-        such that if printed to a compatible terminal, it will display
-        a vaild QR code. The code is printed using ASCII escape
-        codes that alter the coloring of the background.
+        """这个实例方法返回一种含有 ASCII 转义代码字符串形式。
+        如果使用 `print()` 函数输出的话，会在终端里显示成二维码图像。
+        使用 ASCII 转义代码输出的二维码在背景色上会有变化。
 
-        The *module_color* parameter sets what color to
-        use for the data modules (the black part on most QR codes).
-        Likewise, the *background* parameter sets what color to use
-        for the background (the white part on most QR codes).  
+        其中 *module_color* 参数是设置数据块颜色用的（大部分二维码是黑色）。
+        其中 *background* 参数是设置背景色用的（大部分是白色）。
 
-        There are two options for colors. The first, and most widely
-        supported, is to use the 8 or 16 color scheme. This scheme uses
-        eight to sixteen named colors. The following colors are
-        supported the most widely supported: black, red, green,
-        yellow, blue, magenta, and cyan. There are an some additional
-        named colors that are supported by most terminals: light gray,
-        dark gray, light red, light green, light blue, light yellow,
-        light magenta, light cyan, and white. 
+        对于颜色来说，在终端里有两种选择。
+        第一种，最广泛支持的就是实用 8 或 16 色彩机制。
+        这种色彩机制实用了8到16个颜色名字，分别是：
+        black, red, green, yellow, blue, magenta, 和 cyan。
+        另外一些颜色名字是：
+        light gray, dark gray, light red, light green, 
+        light blue, light yellow, light magenta, light cyan, 和 white。 
 
-        There are two special named colors. The first is the
-        "default" color. This color is the color the background of
-        the terminal is set to. The next color is the "reverse"
-        color. This is not really a color at all but a special
-        property that will reverse the current color. These two colors
-        are the default values for *module_color* and *background*
-        respectively. These values should work on most terminals.
+        这里有两个特殊的颜色名字。
+        *module_color* 参数值是 "default"，这个颜色是采用
+        终端的背景色。
+        *background* 参数值是 "reverse"，这个颜色实际上不是真正的颜色，
+        而是一种特殊的财产值，这个财产值是当前颜色的反向色。
+        这两个特殊的颜色名字分别是参数的默认值。
+        以上颜色在绝大多数终端里都有效。
 
-        Finally, there is one more way to specify the color. Some
-        terminals support 256 colors. The actual colors displayed in the
-        terminal is system dependent. This is the least transportable option.
-        To use the 256 color scheme set *module_color* and/or
-        *background* to a number between 0 and 256.
+        最后，还有一项特殊的颜色。
+        有的终端支持 256 色，而实际显示出来的颜色要依赖系统的终端。
+        这是比较少用的一种选择。要使用 256 色机制，就是设置
+        *module_color* 参数和/或 *background* 参数的值介于 0 到 256 之间。
 
-        The *quiet_zone* parameter sets how wide the quiet zone around the code
-        should be. According to the standard this should be 4 modules. It is
-        left settable because such a wide quiet zone is unnecessary in many
-        applications.
+        其中 *quiet_zone* 参数是设置无噪点区域多宽用的。
+        根据二维码标准这个参数值应该是4个数据块。保留成可设置是因为
+        在许多应用程序中不需要使用无噪点区域宽。
 
-        Example:
+        Examples:
             >>> code = pyqrcode.create('Example')
             >>> text = code.terminal()
             >>> print(text)
@@ -672,17 +633,15 @@ class QRCode:
                                  quiet_zone)
 
     def text(self, quiet_zone=4):
-        """This method returns a string based representation of the QR code.
-        The data modules are represented by 1's and the background modules are
-        represented by 0's. The main purpose of this method is to act a
-        starting point for users to create their own renderers.
+        """本实例方法返回二维码的一种字符串表现形式。
+        数据块都用1来表示，背景色块都用0表示。
+        这种文本形式的主要目的是扮演了用户自己建立渲染器的起始点。
 
-        The *quiet_zone* parameter sets how wide the quiet zone around the code
-        should be. According to the standard this should be 4 modules. It is
-        left settable because such a wide quiet zone is unnecessary in many
-        applications.
+        其中 *quiet_zone* 参数是设置无噪点区域宽。
+        根据二维码标准参数值应该是4个数据块。保留可设置是因为在许多应用程序中
+        不需要这样一种无噪点区域宽。
 
-        Example:
+        Examples:
             >>> code = pyqrcode.create('Example')
             >>> text = code.text()
             >>> print(text)

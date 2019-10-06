@@ -23,9 +23,9 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-"""This module lists out all of the tables needed to create a QR code.
-If you are viewing this in the HTML documentation, I recommend reading the
-actual file instead. The formating for the tables is much more readable.
+"""本模块列出了建立二维码需要的所有数据表。
+如果你用 HTML 文档看这个内容，我建议阅读实际文件。
+数据表的格式更容易阅读一些。
 """
 from __future__ import division, unicode_literals
 
